@@ -1,9 +1,8 @@
 'use client';
 import axios from "axios";
 
-const BASE_URL = process.env.NODE_ENV === 'production'
-    ? 'https://api.your-production-domain.com'
-    : 'http://localhost:5000';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
+
 const AxiosInstance = axios.create({
     baseURL: BASE_URL,
     timeout: 10000,
