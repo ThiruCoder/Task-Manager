@@ -13,7 +13,8 @@ const TaskColumn = ({
     getCurrentTask,
     setGetUpdatedId,
     setFormOpen,
-    filteringCurrentData
+    filteringCurrentData,
+    setDeleteTaskId
 }) => {
 
     const Progress = ({ progress }) => {
@@ -126,7 +127,7 @@ const TaskColumn = ({
                                     },
                                 }}>
                                     <motion.div layout>
-                                        <TaskCard task={item} setGetUpdatedId={setGetUpdatedId} setFormOpen={setFormOpen} />
+                                        <TaskCard task={item} setGetUpdatedId={setGetUpdatedId} setFormOpen={setFormOpen} setDeleteTaskId={setDeleteTaskId} />
                                     </motion.div>
                                 </Box>
                             </Paper>

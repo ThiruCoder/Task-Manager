@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { PRIORITY_COLORS } from './TaskForm';
 
-const TaskCard = ({ task, setGetUpdatedId, setFormOpen }) => {
+const TaskCard = ({ task, setGetUpdatedId, setFormOpen, setDeleteTaskId }) => {
 
     const Progress = ({ progress }) => {
         let progressValue;
@@ -115,7 +115,9 @@ const TaskCard = ({ task, setGetUpdatedId, setFormOpen }) => {
                             }}>
                                 <Edit size={16} />
                             </IconButton>
-                            <IconButton size="small">
+                            <IconButton size="small" onClick={() => {
+                                setDeleteTaskId(task?.id)
+                            }}>
                                 <Trash2 size={16} />
                             </IconButton>
                         </Box>

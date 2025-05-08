@@ -11,15 +11,6 @@ const AxiosInstance = axios.create({
     }
 })
 
-export const LocalUrl = axios.create({
-    baseURL: 'http://localhost:5000',
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-    },
-    timeout: 10000
-})
-
 AxiosInstance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token')

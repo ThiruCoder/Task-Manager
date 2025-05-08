@@ -10,7 +10,8 @@ const TaskAssign = ({
     setFormOpen,
     filteringAssignData,
     setGetUpdatedId,
-    getCurrentTask
+    getCurrentTask,
+    setDeleteTaskId
 }) => {
 
     const Progress = ({ progress }) => {
@@ -120,7 +121,7 @@ const TaskAssign = ({
                                     },
                                 }}>
                                     <motion.div layout>
-                                        <TaskCard task={item} setGetUpdatedId={setGetUpdatedId} setFormOpen={setFormOpen} />
+                                        <TaskCard task={item} setGetUpdatedId={setGetUpdatedId} setFormOpen={setFormOpen} setDeleteTaskId={setDeleteTaskId} />
                                     </motion.div>
                                 </Box>
                             </Paper>

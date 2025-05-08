@@ -42,6 +42,8 @@ const TaskContent = () => {
     const [getCurrentTask, setGetCurrentTask] = useState([])
     const [getAssignTask, setGetAssignTask] = useState([])
     const [getUpdatedId, setGetUpdatedId] = useState(null)
+    const [deleteTaskId, setDeleteTaskId] = useState(null)
+    const [refresh, setRefresh] = useState(false)
 
     const [filters, setFilters] = useState({
         search: '',
@@ -80,13 +82,11 @@ const TaskContent = () => {
                 if (!username || !token) {
                     return;
                 }
-
                 const res = await AxiosInstance.post('/task/GetCurrentTaskData', { username }, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     },
                 })
-
                 if (isMounted) {
                     setGetCurrentTask(res.data);
                 }
@@ -104,31 +104,27 @@ const TaskContent = () => {
             isMounted = false;
             clearTimeout(timeoutId);
         };
-    }, []);
+    }, [refresh]);
 
+    // Assign Data
     useEffect(() => {
-        let isMounted = true;
-        let timeoutId;
-
         const fetchTasks = async () => {
             try {
                 const localStorageData = JSON.parse(localStorage.getItem('LocalUser'));
                 const username = localStorageData?.username;
                 const token = localStorage.getItem('token');
 
-                // Stop execution if token or username is missing
                 if (!username || !token) {
                     return;
                 }
-
                 const res = await AxiosInstance.post('/task/GetAssignTaskData', { username }, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     },
                 });
-
-                if (isMounted) {
+                if (res) {
                     setGetAssignTask(res.data);
+                    setRefresh(!refresh)
                 }
             } catch (err) {
                 console.error('Fetch failed:', err);
@@ -140,12 +136,36 @@ const TaskContent = () => {
         };
 
         fetchTasks();
-        return () => {
-            isMounted = false;
-            clearTimeout(timeoutId);
-        };
-    }, []);
+    }, [refresh]);
 
+    // Delete Data
+    useEffect(() => {
+        const deleteTask = async () => {
+            try {
+                const localStorageData = JSON.parse(localStorage.getItem('LocalUser'));
+                const username = localStorageData?.username;
+                const token = localStorage.getItem('token');
+
+                if (!username || !token || !deleteTaskId) return;
+
+                const res = await AxiosInstance.delete(`/task/DeleteTaskById/${deleteTaskId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
+                });
+                if (res) {
+                    setDeleteTaskId(null)
+                    setRefresh(!refresh)
+                }
+            } catch (err) {
+                console.error('Deletion failed:', err);
+            }
+        };
+
+        if (deleteTaskId) {
+            deleteTask();
+        }
+    }, [deleteTaskId]);
 
     const filteringCurrentData = useMemo(() => {
         const searchTerm = filters?.search?.toLowerCase().trim() || '';
@@ -264,9 +284,24 @@ const TaskContent = () => {
                         transition={{ duration: 0.2 }}
                         style={{ height: '100%' }}
                     >
-                        {currentView === 'task' && <TaskColumn getCurrentTask={getCurrentTask} setGetUpdatedId={setGetUpdatedId} setFormOpen={setFormOpen} filteringCurrentData={filteringCurrentData} />}
-                        {currentView === 'assign' && <TaskAssign getAssignTask={getAssignTask} getCurrentTask={getCurrentTask} setGetUpdatedId={setGetUpdatedId} setFormOpen={setFormOpen} filteringAssignData={filteringAssignData} />}
-                        {currentView === 'stats' && <TaskStats getCurrentTask={getCurrentTask} getAssignTask={getAssignTask} />}
+                        {currentView === 'task' && <TaskColumn
+                            getCurrentTask={getCurrentTask}
+                            setGetUpdatedId={setGetUpdatedId}
+                            setFormOpen={setFormOpen}
+                            filteringCurrentData={filteringCurrentData}
+                            setDeleteTaskId={setDeleteTaskId}
+                        />}
+                        {currentView === 'assign' && <TaskAssign
+                            getAssignTask={getAssignTask}
+                            getCurrentTask={getCurrentTask}
+                            setGetUpdatedId={setGetUpdatedId}
+                            setFormOpen={setFormOpen}
+                            filteringAssignData={filteringAssignData}
+                            setDeleteTaskId={setDeleteTaskId}
+                        />}
+                        {currentView === 'stats' && <TaskStats
+                            getCurrentTask={getCurrentTask}
+                            getAssignTask={getAssignTask} />}
                     </motion.div>
                 </AnimatePresence>
             </Box>
