@@ -3,18 +3,20 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Paper, Typography, Box, IconButton } from '@mui/material';
-import { Plus } from 'lucide-react';
+import { PenBoxIcon, Plus } from 'lucide-react';
 import TaskCard from './TaskCard';
 import { Grid } from '@mui/system';
 
 
 
-const TaskColumn = ({
+const TaskCurrent = ({
     getCurrentTask,
     setGetUpdatedId,
     setFormOpen,
     filteringCurrentData,
-    setDeleteTaskId
+    setDeleteTaskId,
+    setTaskView,
+    handleClickOpen,
 }) => {
 
     const Progress = ({ progress }) => {
@@ -52,9 +54,8 @@ const TaskColumn = ({
                                     bgcolor: `${Progress(item?.status)}`,
                                     borderRadius: 2,
                                     p: 2,
-                                    display: 'flex',
                                     flexDirection: 'column',
-                                    height: 250
+                                    height: 220
                                 }}
                             >
                                 <Box sx={{
@@ -99,7 +100,7 @@ const TaskColumn = ({
 
                                     <IconButton
                                         size="small"
-                                        // onClick={handleAddTask}
+                                        onClick={() => setFormOpen(true)}
                                         sx={{
                                             bgcolor: `${<Progress progress={item?.status} />}80`,
                                             '&:hover': {
@@ -114,7 +115,6 @@ const TaskColumn = ({
                                 <Box sx={{
                                     overflowY: 'auto',
                                     flex: 1,
-                                    px: 0.5,
                                     '&::-webkit-scrollbar': {
                                         width: '4px',
                                     },
@@ -125,9 +125,17 @@ const TaskColumn = ({
                                         background: `${<Progress progress={item?.status} />}90`,
                                         borderRadius: '10px',
                                     },
+
                                 }}>
                                     <motion.div layout>
-                                        <TaskCard task={item} setGetUpdatedId={setGetUpdatedId} setFormOpen={setFormOpen} setDeleteTaskId={setDeleteTaskId} />
+                                        <TaskCard
+                                            task={item}
+                                            setGetUpdatedId={setGetUpdatedId}
+                                            setFormOpen={setFormOpen}
+                                            setDeleteTaskId={setDeleteTaskId}
+                                            setTaskView={setTaskView}
+                                            handleClickOpen={handleClickOpen}
+                                        />
                                     </motion.div>
                                 </Box>
                             </Paper>
@@ -141,10 +149,9 @@ const TaskColumn = ({
                                 sx={{
                                     bgcolor: `${Progress(item?.status)}`,
                                     borderRadius: 2,
-                                    p: 2,
-                                    display: 'flex',
                                     flexDirection: 'column',
-                                    height: 250
+                                    height: 220,
+                                    p: 2,
                                 }}
                             >
                                 <Box sx={{
@@ -189,7 +196,7 @@ const TaskColumn = ({
 
                                     <IconButton
                                         size="small"
-                                        // onClick={handleAddTask}
+                                        onClick={() => setFormOpen(true)}
                                         sx={{
                                             bgcolor: `${<Progress progress={item?.status} />}80`,
                                             '&:hover': {
@@ -204,7 +211,6 @@ const TaskColumn = ({
                                 <Box sx={{
                                     overflowY: 'auto',
                                     flex: 1,
-                                    px: 0.5,
                                     '&::-webkit-scrollbar': {
                                         width: '4px',
                                     },
@@ -250,7 +256,7 @@ const TaskColumn = ({
     );
 };
 
-export default TaskColumn;
+export default TaskCurrent;
 
 
 

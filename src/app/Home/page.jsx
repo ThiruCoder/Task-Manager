@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Button,
     Typography,
@@ -8,17 +8,21 @@ import {
     Stack,
     styled,
     alpha,
+    useMediaQuery,
 } from '@mui/material';
 import {
-    ArrowRight,
     Clock,
     BarChart2,
-    DollarSign,
-    LayoutDashboard
-} from 'lucide-react';
+    CalendarClock,
+    FolderKanban,
+    UserCircle,
+    Code,
+    ArrowRight
+} from "lucide-react";
 import { motion } from 'framer-motion';
-import { Header } from '../Components/Header';
 import Footer from '../Components/Footer';
+import SideNavbar from '../Components/SideNavbar';
+import Header from '../Components/Header';
 
 // Styled Components
 const StyledButton = styled(Button)(({ theme }) => ({
@@ -73,19 +77,33 @@ const itemVariants = {
 };
 
 export const HomePage = () => {
+    const [open, setOpen] = useState(false);
+    const [tokenExisted, setTokenExisted] = useState([]);
+
     const features = [
-        { icon: <Clock size={24} />, title: 'Time Tracking' },
-        { icon: <BarChart2 size={24} />, title: 'Analytics' },
-        { icon: <DollarSign size={24} />, title: 'Finance Tools' },
-        { icon: <LayoutDashboard size={24} />, title: 'Dashboard' },
+        { icon: <Clock size={24} />, title: 'Status' },
+        { icon: <BarChart2 size={24} />, title: 'Priority' },
+        { icon: <CalendarClock size={24} />, title: 'Time-Based' },
+        { icon: <FolderKanban size={24} />, title: 'Category or Department' },
+        { icon: <UserCircle size={24} />, title: 'Role or Ownership' },
+        { icon: <Code size={24} />, title: 'Tool or Technology' },
     ];
+    const matches = useMediaQuery('(min-width:600px)');
+    useEffect(() => {
+        if (matches) {
+            setOpen(false)
+        }
+    }, [matches])
     return (
         <>
             <Box sx={{ mb: 4 }}>
                 {/* Header */}
-                <Header />
+                <Header setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
+                <SideNavbar setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
                 {/* Hero Section */}
-                <HeroSection sx={{ mt: 10 }}>
+                <HeroSection sx={{ mt: 10 }} onClick={() => {
+                    setOpen(false)
+                }}>
                     <Container maxWidth="lg">
                         <motion.div
                             initial="hidden"
@@ -122,21 +140,41 @@ export const HomePage = () => {
                                 </motion.div>
 
                                 <motion.div variants={itemVariants}>
-                                    <Box display="flex" gap={4} mt={4}>
-                                        {features.map((feature, index) => (
-                                            <motion.div
-                                                key={index}
-                                                whileHover={{ y: -5 }}
-                                                transition={{ type: 'spring', stiffness: 300 }}
-                                            >
-                                                <Stack direction="row" alignItems="center" spacing={1}>
-                                                    <Box color="primary.main">{feature.icon}</Box>
-                                                    <Typography>{feature.title}</Typography>
-                                                </Stack>
-                                            </motion.div>
-                                        ))}
+                                    <Box mt={4}>
+                                        <Stack
+                                            direction="row"
+                                            flexWrap="wrap"
+                                            gap={1}
+                                            justifyContent="flex-start"
+                                            alignItems="center"
+                                        >
+                                            {features.map((feature, index) => (
+                                                <motion.div
+                                                    key={index}
+                                                    whileHover={{ y: -5 }}
+                                                    transition={{ type: 'spring', stiffness: 300 }}
+                                                >
+                                                    <Stack
+                                                        direction="row"
+                                                        alignItems="center"
+                                                        spacing={1}
+                                                        sx={{
+                                                            px: 2,
+                                                            py: 1,
+                                                            borderRadius: 2,
+                                                            borderColor: 'divider',
+                                                            minWidth: 180,
+                                                        }}
+                                                    >
+                                                        <Box color="primary.main">{feature.icon}</Box>
+                                                        <Typography>{feature.title}</Typography>
+                                                    </Stack>
+                                                </motion.div>
+                                            ))}
+                                        </Stack>
                                     </Box>
                                 </motion.div>
+
                             </Stack>
                         </motion.div>
                     </Container>

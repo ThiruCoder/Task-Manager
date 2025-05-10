@@ -11,7 +11,9 @@ const TaskAssign = ({
     filteringAssignData,
     setGetUpdatedId,
     getCurrentTask,
-    setDeleteTaskId
+    setDeleteTaskId,
+    setTaskView,
+    handleClickOpen
 }) => {
 
     const Progress = ({ progress }) => {
@@ -46,10 +48,9 @@ const TaskAssign = ({
                                 sx={{
                                     bgcolor: `${Progress(item?.status)}`,
                                     borderRadius: 2,
-                                    p: 2,
-                                    display: 'flex',
                                     flexDirection: 'column',
-                                    height: 250
+                                    height: 220,
+                                    p: 2,
                                 }}
                             >
                                 <Box sx={{
@@ -108,7 +109,6 @@ const TaskAssign = ({
                                 <Box sx={{
                                     overflowY: 'auto',
                                     flex: 1,
-                                    px: 0.5,
                                     '&::-webkit-scrollbar': {
                                         width: '4px',
                                     },
@@ -121,7 +121,14 @@ const TaskAssign = ({
                                     },
                                 }}>
                                     <motion.div layout>
-                                        <TaskCard task={item} setGetUpdatedId={setGetUpdatedId} setFormOpen={setFormOpen} setDeleteTaskId={setDeleteTaskId} />
+                                        <TaskCard
+                                            task={item}
+                                            setGetUpdatedId={setGetUpdatedId}
+                                            setFormOpen={setFormOpen}
+                                            setDeleteTaskId={setDeleteTaskId}
+                                            setTaskView={setTaskView}
+                                            handleClickOpen={handleClickOpen}
+                                        />
                                     </motion.div>
                                 </Box>
                             </Paper>
@@ -135,10 +142,9 @@ const TaskAssign = ({
                                 sx={{
                                     bgcolor: `${Progress(item?.status)}`,
                                     borderRadius: 2,
-                                    p: 2,
-                                    display: 'flex',
                                     flexDirection: 'column',
-                                    height: 250
+                                    height: 220,
+                                    p: 2,
                                 }}
                             >
                                 <Box sx={{

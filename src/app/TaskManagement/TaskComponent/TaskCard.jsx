@@ -2,129 +2,94 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardContent, Typography, Chip, Box, IconButton, Checkbox } from '@mui/material';
+import { Card, CardContent, Typography, Chip, Box, IconButton, Checkbox, CardHeader, Button } from '@mui/material';
 import {
     Clock,
     Trash2,
     Edit,
+    TableOfContents,
 } from 'lucide-react';
 import { PRIORITY_COLORS } from './TaskForm';
 
-const TaskCard = ({ task, setGetUpdatedId, setFormOpen, setDeleteTaskId }) => {
+const TaskCard = ({ task, setGetUpdatedId, setFormOpen, setDeleteTaskId, setTaskView, handleClickOpen }) => {
 
-    const Progress = ({ progress }) => {
-        let progressValue;
-        switch (progress) {
-            case 'Pending':
-                return progressValue = '#ffc3c5';
-            case 'In Progress':
-                return progressValue = '#a7faf6';
-            case 'Archived':
-                return progressValue = '#dcf9a6';
-            case 'Completed':
-                return progressValue = '#6ee7b7';
-            default:
-                return progressValue = '#ffc3c5';
+    const Progress = (status) => {
+        switch (status) {
+            case 'Pending': return '#ffc3c5';
+            case 'In Progress': return '#a7faf6';
+            case 'Archived': return '#dcf9a6';
+            case 'Completed': return '#6ee7b7';
+            default: return '#e0e0e0';
         }
     };
 
-    const Priority = ({ progress }) => {
-        let progressValue;
-        switch (progress) {
-            case 'Low':
-                return progressValue = '#ffc3c5';
-            case 'Medium':
-                return progressValue = '#a7faf6';
-            case 'High':
-                return progressValue = '#dcf9a6';
-            case 'Critical':
-                return progressValue = '#6ee7b7';
-            default:
-                return progressValue = '#ffc3c5';
+    const Priority = (priority) => {
+        switch (priority) {
+            case 'Low': return '#ffc3c5';
+            case 'Medium': return '#a7faf6';
+            case 'High': return '#dcf9a6';
+            case 'Critical': return '#6ee7b7';
+            default: return '#e0e0e0';
         }
     };
 
     return (
-        <motion.div
-            layout
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-            style={{ width: '100%', marginBottom: '12px' }}
+        <Card
+            sx={{
+                position: 'relative',
+                opacity: task.status === 'Completed' ? 0.8 : 1,
+                borderLeft: `4px solid ${PRIORITY_COLORS[task.priority]}`,
+            }}
+            key={`Index-${task?.title}`}
         >
-            {/* {task && task?.length > 0 ? task.map((item, index) => ( */}
-            <Card
-                sx={{
-                    position: 'relative',
-                    opacity: task.status === 'Completed' ? 0.8 : 1,
-                    borderLeft: `4px solid ${PRIORITY_COLORS[task.priority]}`,
-                }}
-                key={`Index-${task?.title}`}
-            >
-                <CardContent>
-                    <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                        <Box sx={{ display: 'flex', alignItems: 'flex-start', flex: 1 }}>
-                            <Checkbox
-                                checked={task.status === 'Completed'}
-                                sx={{ mt: -0.5, mr: 1 }}
-                            />
-                            <Box>
-                                <Typography
-                                    variant="h6"
-                                    sx={{
-                                        textDecoration: task.status === 'Completed' ? 'line-through' : 'none',
-                                        fontWeight: 600,
-                                        fontSize: '1rem',
-                                        mb: 0.5,
-                                        width: 240,
-                                        overflow: 'hidden',
-                                        display: '-webkit-box',
-                                        WebkitBoxOrient: 'vertical',
-                                        WebkitLineClamp: 1,
-                                        lineHeight: 1.4,
-                                    }}
-                                >
-                                    {task.title}
-                                </Typography>
-                                {task.description && (
-                                    <Typography
-                                        variant="body2"
-                                        color="text.secondary"
-                                        sx={{
-                                            mb: 1.5,
-                                            width: 240,
-                                            overflow: 'hidden',
-                                            display: '-webkit-box',
-                                            WebkitBoxOrient: 'vertical',
-                                            WebkitLineClamp: 2,
-                                            lineHeight: 1.4,
-                                        }}
-                                    >
-                                        {task.description}
-                                    </Typography>
+            <CardContent>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }} >
 
-                                )}
+                    <CardHeader
+                        sx={{ p: 0 }}
+                        title={
+                            <Typography sx={{ fontSize: 14, fontWeight: 600 }}>{task?.title}</Typography>
+                        } subheader={
+                            <Typography
+                                sx={{
+                                    fontSize: 14,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    display: '-webkit-box',
+                                    WebkitLineClamp: 2,
+                                    WebkitBoxOrient: 'vertical',
+                                    lineHeight: '1.5em',
+                                    height: '3em',
+                                }}
+                            >
+                                {task?.description}
+                            </Typography>
+                        }
+                        action={
+                            <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                                <Box>
+                                    <IconButton size="small" onClick={() => {
+                                        setGetUpdatedId(task?.id)
+                                        setFormOpen(true)
+                                    }}>
+                                        <Edit size={16} />
+                                    </IconButton>
+                                    <IconButton size="small" onClick={() => {
+                                        setDeleteTaskId(task?.id)
+                                    }}>
+                                        <Trash2 size={16} />
+                                    </IconButton>
+                                </Box>
+
                             </Box>
-                        </Box>
-                        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                            <IconButton size="small" onClick={() => {
-                                setGetUpdatedId(task?.id)
-                                setFormOpen(true)
-                            }}>
-                                <Edit size={16} />
-                            </IconButton>
-                            <IconButton size="small" onClick={() => {
-                                setDeleteTaskId(task?.id)
-                            }}>
-                                <Trash2 size={16} />
-                            </IconButton>
-                        </Box>
-                    </Box>
+                        }
 
-                    <Box sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    />
 
+                </Box>
+
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', position: 'relative', top: 14, alignItems: 'center' }} >
+                    <Box sx={{ display: 'flex', gap: 1 }}>
                         <Chip
                             icon={<Clock size={14} />}
                             label={task?.status}
@@ -133,7 +98,8 @@ const TaskCard = ({ task, setGetUpdatedId, setFormOpen, setDeleteTaskId }) => {
                             sx={{
                                 height: '24px',
                                 '& .MuiChip-label': { px: 1, fontSize: '0.75rem' },
-                                '& .MuiChip-icon': { ml: 0.5 }
+                                '& .MuiChip-icon': { ml: 0.5 },
+                                bgcolor: Progress(task?.status)
                             }}
                         />
                         <Chip
@@ -144,13 +110,23 @@ const TaskCard = ({ task, setGetUpdatedId, setFormOpen, setDeleteTaskId }) => {
                             sx={{
                                 height: '24px',
                                 '& .MuiChip-label': { px: 1, fontSize: '0.75rem' },
-                                '& .MuiChip-icon': { ml: 0.5 }
+                                '& .MuiChip-icon': { ml: 0.5 },
+                                bgcolor: Progress(task?.status)
                             }}
                         />
                     </Box>
-                </CardContent>
-            </Card>
-        </motion.div>
+                    <Box sx={{}}>
+                        <Button sx={{
+                        }} startIcon={<TableOfContents size={15} />}
+                            onClick={() => {
+                                setTaskView(task?.id);
+                                handleClickOpen()
+                            }}
+                        >View</Button>
+                    </Box>
+                </Box>
+            </CardContent>
+        </Card>
     );
 };
 

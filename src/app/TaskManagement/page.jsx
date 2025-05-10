@@ -26,13 +26,15 @@ import {
     Menu
 } from 'lucide-react';
 
-import { Header } from '../Components/Header';
 import { AxiosInstance } from '../Middlewares/GlobalUrlErrorHandler';
-import TaskAssign from './TaskComponent/TaskBoard';
-import TaskColumn from './TaskComponent/TaskColumn';
+import TaskAssign from './TaskComponent/TaskAssign';
 import TaskFilter from './TaskComponent/TaskFilter';
 import TaskForm from './TaskComponent/TaskForm';
 import TaskStats from './TaskComponent/TaskStats';
+import TaskCurrent from './TaskComponent/TaskCurrent';
+import TaskViewPage from './TaskComponent/TaskViewPage';
+import { Grid } from '@mui/system';
+import Header from '../Components/Header';
 
 
 const TaskContent = () => {
@@ -43,7 +45,11 @@ const TaskContent = () => {
     const [getAssignTask, setGetAssignTask] = useState([])
     const [getUpdatedId, setGetUpdatedId] = useState(null)
     const [deleteTaskId, setDeleteTaskId] = useState(null)
+    const [taskView, setTaskView] = useState(null)
     const [refresh, setRefresh] = useState(false)
+    const [open, setOpen] = useState(false);
+    const [taskData, setTaskData] = React.useState(null);
+    // console.log('taskView', taskView);
 
     const [filters, setFilters] = useState({
         search: '',
@@ -67,13 +73,10 @@ const TaskContent = () => {
             const username = localStorageData?.username;
             setUsername(username)
         }
-    }, []);
+    }, [refresh]);
 
     // Current Data
     useEffect(() => {
-        let isMounted = true;
-        let timeoutId;
-
         const fetchTasks = async () => {
             try {
                 const localStorageData = JSON.parse(localStorage.getItem('LocalUser'));
@@ -87,23 +90,15 @@ const TaskContent = () => {
                         Authorization: `Bearer ${token}`
                     },
                 })
-                if (isMounted) {
+                if (res) {
                     setGetCurrentTask(res.data);
+                    setRefresh(!refresh)
                 }
             } catch (err) {
                 console.log('Fetch failed:', err);
-            } finally {
-                if (isMounted) {
-                    timeoutId = setTimeout(fetchTasks, 5000);
-                }
             }
         };
-
         fetchTasks();
-        return () => {
-            isMounted = false;
-            clearTimeout(timeoutId);
-        };
     }, [refresh]);
 
     // Assign Data
@@ -128,10 +123,6 @@ const TaskContent = () => {
                 }
             } catch (err) {
                 console.error('Fetch failed:', err);
-            } finally {
-                if (isMounted) {
-                    timeoutId = setTimeout(fetchTasks, 5000);
-                }
             }
         };
 
@@ -156,6 +147,8 @@ const TaskContent = () => {
                 if (res) {
                     setDeleteTaskId(null)
                     setRefresh(!refresh)
+                    setTaskData(null)
+                    setRefresh(!refresh)
                 }
             } catch (err) {
                 console.error('Deletion failed:', err);
@@ -165,8 +158,9 @@ const TaskContent = () => {
         if (deleteTaskId) {
             deleteTask();
         }
-    }, [deleteTaskId]);
+    }, [deleteTaskId, refresh]);
 
+    // Current Data filtering
     const filteringCurrentData = useMemo(() => {
         const searchTerm = filters?.search?.toLowerCase().trim() || '';
 
@@ -184,6 +178,7 @@ const TaskContent = () => {
         });
     }, [getCurrentTask, filters]);
 
+    // Assign Data filtering
     const filteringAssignData = useMemo(() => {
         const searchTerm = filters?.search?.toLowerCase().trim() || '';
 
@@ -201,131 +196,201 @@ const TaskContent = () => {
         });
     }, [getAssignTask, filters]);
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+
+    // console.log(getUpdatedId);
+
+    const handleClose = () => {
+        setOpen(false);
+        setTaskView(null)
+    };
+
+    useEffect(() => {
+        if (formOpen) {
+            setOpen(false);
+        }
+    }, [formOpen]);
+
+
+    // console.log(formOpen);
+
+
+    // console.log('getUpdatedId', getUpdatedId);
+
     // localStorage.setItem('LocalUser', JSON.stringify(err.data.message))
     return (
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <Box sx={{ px: 3, py: 2 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                    <Typography variant="h5" fontWeight="bold">
-                        {currentView === 'task' || currentView === 'assign' ? 'Task Board' : 'Task Analytics'} {username === 'Token is required.' ? `(${username})` : null}
-                    </Typography>
-                    {username ?
-                        <Button
-                            variant="contained"
-                            disableElevation
-                            startIcon={<PlusCircle size={18} />}
-                            onClick={() => setFormOpen(true)}
-                            sx={{ borderRadius: 28, px: 3 }}
+        <Container>
+            <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <Box >
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                        <Typography variant="h5" fontWeight="bold">
+                            {currentView === 'task' || currentView === 'assign' ? 'Task Board' : 'Task Analytics'} {username === 'Token is required.' ? `(${username})` : null}
+                        </Typography>
+                        {username ?
+                            <Button
+                                variant="contained"
+                                disableElevation
+                                startIcon={<PlusCircle size={18} />}
+                                onClick={() => setFormOpen(true)}
+                                sx={{ borderRadius: 28, px: 3 }}
+                            >
+                                Add Task
+                            </Button>
+                            : null}
+                    </Box>
+
+                    {/* For current Task */}
+                    {currentView === 'task' && (
+                        <TaskFilter
+                            source="task"
+                            getCurrentTask={getCurrentTask}
+                            filters={filters}
+                            setFilters={setFilters}
+                            filteringCurrentData={filteringCurrentData}
+                        />
+                    )}
+                    {/* For assign Task */}
+                    {currentView === 'assign' && (
+                        <TaskFilter
+                            source="assign"
+                            getAssignTask={getAssignTask}
+                            filters={filters}
+                            setFilters={setFilters}
+                            filteringAssignData={filteringAssignData}
+                        />
+                    )}
+
+                    {/* For Tabs */}
+                    <Paper sx={{ mb: 3 }}>
+                        <Tabs
+                            value={currentView}
+                            onChange={handleViewChange}
+                            sx={{
+                                '& .MuiTabs-indicator': {
+                                    height: 3,
+                                    borderRadius: 1.5,
+                                },
+                            }}
                         >
-                            Add Task
-                        </Button>
-                        : null}
+                            <Tab
+                                value="task"
+                                label="Task View"
+                                icon={<KanbanSquare size={10} />}
+                                iconPosition="start"
+                            />
+                            <Tab
+                                value="assign"
+                                label="Assign View"
+                                icon={<KanbanSquare size={10} />}
+                                iconPosition="start"
+                            />
+                            <Tab
+                                value="stats"
+                                label="Analytics"
+                                icon={<BarChart4 size={10} />}
+                                iconPosition="start"
+                            />
+                        </Tabs>
+                    </Paper>
                 </Box>
 
-                {currentView === 'task' && (
-                    <TaskFilter
-                        source="task"
-                        getCurrentTask={getCurrentTask}
-                        filters={filters}
-                        setFilters={setFilters}
-                        filteringCurrentData={filteringCurrentData}
-                    />
-                )}
-                {currentView === 'assign' && (
-                    <TaskFilter
-                        source="assign"
-                        getAssignTask={getAssignTask}
-                        filters={filters}
-                        setFilters={setFilters}
-                        filteringAssignData={filteringAssignData}
-                    />
-                )}
+                <Box sx={{ px: 3, flex: 1, overflowY: 'auto', height: '100%' }}>
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={currentView}
+                            initial={{ opacity: 0, x: 10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -10 }}
+                            transition={{ duration: 0.2 }}
+                            style={{ height: '100%' }}
+                        >
+                            {/* Current Task Data */}
+                            {currentView === 'task' && <TaskCurrent
+                                getCurrentTask={getCurrentTask}
+                                setGetUpdatedId={setGetUpdatedId}
+                                setFormOpen={setFormOpen}
+                                filteringCurrentData={filteringCurrentData}
+                                setDeleteTaskId={setDeleteTaskId}
+                                setTaskView={setTaskView}
+                                handleClickOpen={handleClickOpen}
+                            />}
 
-                <Paper sx={{ mb: 3 }}>
-                    <Tabs
-                        value={currentView}
-                        onChange={handleViewChange}
-                        sx={{
-                            '& .MuiTabs-indicator': {
-                                height: 3,
-                                borderRadius: 1.5,
-                            },
-                        }}
-                    >
-                        <Tab
-                            value="task"
-                            label="Task View"
-                            icon={<KanbanSquare size={10} />}
-                            iconPosition="start"
-                        />
-                        <Tab
-                            value="assign"
-                            label="Assign View"
-                            icon={<KanbanSquare size={10} />}
-                            iconPosition="start"
-                        />
-                        <Tab
-                            value="stats"
-                            label="Analytics"
-                            icon={<BarChart4 size={10} />}
-                            iconPosition="start"
-                        />
-                    </Tabs>
-                </Paper>
-            </Box>
+                            {/* Assign Task Data */}
+                            {currentView === 'assign' && <TaskAssign
+                                getAssignTask={getAssignTask}
+                                getCurrentTask={getCurrentTask}
+                                setGetUpdatedId={setGetUpdatedId}
+                                setFormOpen={setFormOpen}
+                                filteringAssignData={filteringAssignData}
+                                setDeleteTaskId={setDeleteTaskId}
+                                setTaskView={setTaskView}
+                                handleClickOpen={handleClickOpen}
+                            />}
 
-            <Box sx={{ px: 3, flex: 1, overflowY: 'auto', height: '100%' }}>
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={currentView}
-                        initial={{ opacity: 0, x: 10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
-                        transition={{ duration: 0.2 }}
-                        style={{ height: '100%' }}
-                    >
-                        {currentView === 'task' && <TaskColumn
-                            getCurrentTask={getCurrentTask}
-                            setGetUpdatedId={setGetUpdatedId}
-                            setFormOpen={setFormOpen}
-                            filteringCurrentData={filteringCurrentData}
-                            setDeleteTaskId={setDeleteTaskId}
-                        />}
-                        {currentView === 'assign' && <TaskAssign
-                            getAssignTask={getAssignTask}
-                            getCurrentTask={getCurrentTask}
-                            setGetUpdatedId={setGetUpdatedId}
-                            setFormOpen={setFormOpen}
-                            filteringAssignData={filteringAssignData}
-                            setDeleteTaskId={setDeleteTaskId}
-                        />}
-                        {currentView === 'stats' && <TaskStats
-                            getCurrentTask={getCurrentTask}
-                            getAssignTask={getAssignTask} />}
-                    </motion.div>
-                </AnimatePresence>
+                            {/* Stats Task Data */}
+                            {currentView === 'stats' && <TaskStats
+                                getCurrentTask={getCurrentTask}
+                                getAssignTask={getAssignTask} />}
+                        </motion.div>
+                    </AnimatePresence>
+                </Box>
+
+                {/* Form */}
+                {username ?
+                    <TaskForm
+                        open={formOpen}
+                        onClose={() => setFormOpen(false)}
+                        onSubmit={handleFormSubmit}
+                        getUpdatedId={getUpdatedId}
+                        setGetUpdatedId={setGetUpdatedId}
+                        setFormOpen={setFormOpen}
+                    />
+                    : null}
+
+                {/* Task View Page */}
+                <Grid container spacing={2}>
+                    <Grid size={{ xs: 12, md: 12 }}>
+                        <React.Fragment>
+                            {open ?
+                                <TaskViewPage
+                                    handleClose={handleClose}
+                                    handleClickOpen={handleClickOpen}
+                                    taskView={taskView}
+                                    open={open}
+                                    setOpen={setOpen}
+                                    getAssignTask={getAssignTask}
+                                    getCurrentTask={getCurrentTask}
+                                    currentView={currentView}
+                                    setDeleteTaskId={setDeleteTaskId}
+                                    taskData={taskData}
+                                    setTaskData={setTaskData}
+                                    getUpdatedId={getUpdatedId}
+                                    setGetUpdatedId={setGetUpdatedId}
+                                    setFormOpen={setFormOpen}
+                                    refresh={refresh}
+                                    setRefresh={setRefresh}
+                                />
+                                : null}
+                        </React.Fragment>
+                    </Grid>
+                    {/* <Grid size={{ xs: 12, md: 6 }}></Grid> */}
+                </Grid>
             </Box>
-            {username ?
-                <TaskForm
-                    open={formOpen}
-                    onClose={() => setFormOpen(false)}
-                    onSubmit={handleFormSubmit}
-                    getUpdatedId={getUpdatedId}
-                    setGetUpdatedId={setGetUpdatedId}
-                    setFormOpen={setFormOpen}
-                />
-                : null}
-        </Box>
+        </Container>
     );
 };
 
 const TaskManagement = () => {
+    const [tokenExisted, setTokenExisted] = useState([]);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <Header />
+            <Header tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
             <Box sx={{ display: 'flex', flexDirection: 'column', mt: 10 }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
                     <TaskContent />

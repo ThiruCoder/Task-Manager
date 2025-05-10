@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Paper, Typography, Grid } from '@mui/material';
+import { Box, Paper, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 import {
     CheckCircle,
@@ -9,6 +9,7 @@ import {
     Clock,
     Activity
 } from 'lucide-react';
+import { Grid } from '@mui/system';
 
 const StatCard = ({ title, value, icon, color, delay = 0 }) => {
     return (
@@ -64,7 +65,7 @@ const TaskStats = ({ getCurrentTask, getAssignTask }) => {
     return (
         <Box sx={{ mb: 4 }}>
             <Grid container spacing={3}>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <StatCard
                         title="Total Tasks"
                         value={getCurrentTask.length}
@@ -73,7 +74,7 @@ const TaskStats = ({ getCurrentTask, getAssignTask }) => {
                         delay={0.1}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <StatCard
                         title="Completion Rate"
                         value={getAssignTask.length}
@@ -82,7 +83,7 @@ const TaskStats = ({ getCurrentTask, getAssignTask }) => {
                         delay={0.2}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <StatCard
                         title="Pending Tasks"
                         value={pendingTask.length || 0}
@@ -91,7 +92,7 @@ const TaskStats = ({ getCurrentTask, getAssignTask }) => {
                         delay={0.3}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <StatCard
                         title="In Progress Tasks"
                         value={inProgressTask.length || 0}
@@ -100,7 +101,7 @@ const TaskStats = ({ getCurrentTask, getAssignTask }) => {
                         delay={0.4}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <StatCard
                         title="Archived Tasks"
                         value={archivedTask.length || 0}
@@ -109,7 +110,7 @@ const TaskStats = ({ getCurrentTask, getAssignTask }) => {
                         delay={0.4}
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }}>
                     <StatCard
                         title="Completed Tasks"
                         value={completedTask.length || 0}

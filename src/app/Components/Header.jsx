@@ -1,12 +1,13 @@
 'use client';
 
-import { AppBar, Button, styled, Toolbar, Typography, Container } from '@mui/material';
+import { AppBar, Button, styled, Toolbar, Typography, Container, IconButton, Menu, Tooltip } from '@mui/material';
 import { Box } from '@mui/system';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, BadgeInfo, CircleEllipsis, CirclePlus, Home, LayoutDashboard, LayoutList, LogIn, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AxiosInstance } from '../Middlewares/GlobalUrlErrorHandler';
+import { navItems } from './NavData';
 
 const NavButton = styled(Button)(({ theme }) => ({
     color: theme.palette.text.primary,
@@ -26,16 +27,11 @@ const StyledButton = styled(Button)(({ theme }) => ({
     transition: 'all 0.3s ease',
 }));
 
-export const Header = ({ headerColor }) => {
-    const [tokenExisted, setTokenExisted] = useState([]);
+const Header = ({ setOpen, open, tokenExisted, setTokenExisted }) => {
+
+
     const [role, setRole] = useState('')
     const router = useRouter();
-    const navItems = [
-        { title: 'Home', link: '/' },
-        { title: 'Task Manager', link: '/TaskManagement' },
-        { title: 'About', link: '/About' },
-        { title: 'Dashboard', link: '/Dashboard' }
-    ];
 
     useEffect(() => {
         const VerifyToken = async () => {
@@ -80,24 +76,43 @@ export const Header = ({ headerColor }) => {
         }}>
             <Container maxWidth="lg">
                 <Toolbar disableGutters>
-                    <Typography variant="h5" fontWeight="bold" sx={{ flexGrow: 1, color: 'black' }}>
+                    <Tooltip title='Menu'>
+                        {open ?
+                            <IconButton
+                                onClick={() => setOpen(!open)}
+                                size="small" sx={{ mr: 3, display: { xs: 'block', md: 'none' } }}>
+                                <CirclePlus size={25} color="black" style={{ rotate: '45deg' }} />
+                            </IconButton>
+                            : <IconButton
+                                onClick={() => setOpen(!open)}
+                                size="small" sx={{ mr: 3, display: { xs: 'block', md: 'none' } }}>
+                                <CircleEllipsis size={25} color="black" />
+                            </IconButton>
+                        }
+                    </Tooltip>
+                    <Typography component={'a'} href='/' variant="h5" fontWeight="bold" sx={{ flexGrow: 1, color: 'black', textAlign: { xs: 'center', md: 'start' } }}>
                         Task Manager
                     </Typography>
 
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
+
                         {navItems.map((item, index) => {
                             if (item?.title === 'Dashboard') {
                                 return tokenExisted?.data?.role === 'admin' ? (
-                                    <NavButton href={item?.link} key={`Item-${index}`} sx={{ fontWeight: 700, color: 'black' }}>
-                                        {item?.title}
-                                    </NavButton>
+                                    <Tooltip title={item?.tool}>
+                                        <NavButton href={item?.link} key={s`Item-${index}`} sx={{ fontWeight: 700, color: 'black' }}>
+                                            {item?.title}
+                                        </NavButton>
+                                    </Tooltip>
                                 ) : null
                             }
                             // For other items
                             return (
-                                <NavButton href={item?.link} key={`Item-${index}`} sx={{ fontWeight: 700 }}>
-                                    {item?.title}
-                                </NavButton>
+                                <Tooltip title={item?.tool} key={`Tooltip-${item?.id || index}`}>
+                                    <NavButton href={item?.link} sx={{ fontWeight: 700 }}>
+                                        {item?.title}
+                                    </NavButton>
+                                </Tooltip>
                             );
                         })}
                     </Box>
@@ -105,26 +120,40 @@ export const Header = ({ headerColor }) => {
                     {/* // message: "Token is active." */}
                     {tokenExisted?.message === 'Token is active.' ?
                         (<Link href="/Auth" passHref>
-                            <StyledButton
-                                variant="contained"
-                                color="primary"
-                                endIcon={<ArrowRight size={16} />}
-                                sx={{ ml: 3 }}
-                                onClick={handleLogout}
-                            >
-                                LOG OUT
-                            </StyledButton>
-                        </Link>
-                        ) : (
-                            <Link href="/Auth" passHref>
+                            <Tooltip title='LogOut'>
+                                <IconButton size="small" sx={{ mr: 3, display: { xs: 'block', md: 'none' } }} onClick={handleLogout}>
+                                    <LogOut size={25} color='black' />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title='LogOut'>
                                 <StyledButton
                                     variant="contained"
                                     color="primary"
                                     endIcon={<ArrowRight size={16} />}
-                                    sx={{ ml: 3 }}
+                                    sx={{ ml: 3, display: { xs: 'none', md: 'flex' } }}
+                                    onClick={handleLogout}
                                 >
-                                    SIGN IN
+                                    LOG OUT
                                 </StyledButton>
+                            </Tooltip>
+                        </Link>
+                        ) : (
+                            <Link href="/Auth" passHref>
+                                <Tooltip title='LogIn'>
+                                    <IconButton size="small" sx={{ mr: 3, display: { xs: 'block', md: 'none' } }}>
+                                        <LogIn size={25} color='black' />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title='LogIn'>
+                                    <StyledButton
+                                        variant="contained"
+                                        color="primary"
+                                        endIcon={<ArrowRight size={16} />}
+                                        sx={{ ml: 3, display: { xs: 'none', md: 'flex' } }}
+                                    >
+                                        SIGN IN
+                                    </StyledButton>
+                                </Tooltip>
                             </Link>
                         )
                     }
@@ -133,3 +162,5 @@ export const Header = ({ headerColor }) => {
         </AppBar>
     );
 };
+
+export default Header;

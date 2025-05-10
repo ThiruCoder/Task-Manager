@@ -203,6 +203,7 @@ const DashboardTaskForm = ({
         }
     }
 
+    // Get all data
     useEffect(() => {
         async function GetUserData() {
             if (!UpdatedId) return;
@@ -218,7 +219,6 @@ const DashboardTaskForm = ({
                     const filtering = Array.isArray(response?.data)
                         ? response?.data.filter((item) => item.id === UpdatedId)
                         : [response?.data].filter((item) => item.id === UpdatedId);
-                    console.log(filtering);
 
                     if (filtering?.length > 0) {
                         const task = filtering[0];
@@ -241,7 +241,7 @@ const DashboardTaskForm = ({
     }, [UpdatedId]);
 
 
-
+    // Reset form
     const resetForm = () => {
         setTitle('');
         setDescription('');

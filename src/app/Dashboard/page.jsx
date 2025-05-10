@@ -15,9 +15,10 @@ import TaskView from './TaskViewPage/page';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTaskData } from '@taskManager/app/ReduxSection/TaskReducer/TaskReducer';
 import Footer from '../Components/Footer';
-import { Header } from '../Components/Header';
 import UpdateRoleForm from './UpdateRole/page';
 import ProtectedRoute from '../ProtectedRoute';
+import Header from '../Components/Header';
+import SideNavbar from '../Components/SideNavbar';
 
 const Dashboard = () => {
   const [userData, setUserData] = useState([]);
@@ -26,6 +27,7 @@ const Dashboard = () => {
   const [viewData, setViewData] = useState(false)
   const [viewSingleData, setViewSingleData] = useState(false)
   const [headerColor, setHeaderColor] = useState('white');
+  const [tokenExisted, setTokenExisted] = useState([]);
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.TaskData);
 
@@ -74,7 +76,8 @@ const Dashboard = () => {
     <ProtectedRoute>
       <Box sx={{ bgcolor: '#e8e6e6' }}>
         {/* <DashboardHeader headerColor={headerColor} /> */}
-        <Header headerColor={headerColor} />
+        <Header headerColor={headerColor} setTokenExisted={setTokenExisted} tokenExisted={tokenExisted} />
+        <SideNavbar />
         <Container sx={{ pt: 12, mb: 4 }}>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid size={{ xs: 12, md: 4 }}>
