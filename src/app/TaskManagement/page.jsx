@@ -35,6 +35,7 @@ import TaskCurrent from './TaskComponent/TaskCurrent';
 import TaskViewPage from './TaskComponent/TaskViewPage';
 import { Grid } from '@mui/system';
 import Header from '../Components/Header';
+import SideNavbar from '../Components/SideNavbar';
 
 
 const TaskContent = () => {
@@ -385,15 +386,21 @@ const TaskContent = () => {
 
 const TaskManagement = () => {
     const [tokenExisted, setTokenExisted] = useState([]);
+    const [open, setOpen] = useState(false);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     return (
         <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Header tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
-            <Box sx={{ display: 'flex', flexDirection: 'column', mt: 10 }}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
-                    <TaskContent />
+            <Box component={'main'} onClick={() => setOpen(!open)}>
+                <CssBaseline />
+                <Header setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
+                <Box sx={{ pt: 8 }}>
+                    <SideNavbar setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', mt: 10 }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+                        <TaskContent />
+                    </Box>
                 </Box>
             </Box>
         </ThemeProvider>

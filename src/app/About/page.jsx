@@ -10,6 +10,7 @@ import img2 from '../../../public/Screenshot 2025-04-16 163739.png'
 import img3 from '../../../public/Screenshot 2025-04-06 140736.png'
 import Footer from '../Components/Footer';
 import Header from '../Components/Header';
+import SideNavbar from '../Components/SideNavbar';
 
 
 const SkillBar = styled(Box)(({ theme }) => ({
@@ -40,6 +41,7 @@ const ContactForm = styled('form')(({ theme }) => ({
 
 export default function About() {
     const [tokenExisted, setTokenExisted] = useState([]);
+    const [open, setOpen] = useState(false);
     const skills = [
         {
             category: 'Frontend',
@@ -153,8 +155,11 @@ export default function About() {
 
     return (
 
-        <Box component="main" sx={{ bgcolor: 'white', color: 'text.primary' }}>
-            <Header setTokenExisted={setTokenExisted} tokenExisted={tokenExisted} />
+        <Box component="main" sx={{ bgcolor: 'white', color: 'text.primary' }} onClick={() => setOpen(!open)}>
+            <Header setOpen={setOpen} open={open} setTokenExisted={setTokenExisted} tokenExisted={tokenExisted} />
+            <Box sx={{ pt: 8 }}>
+                <SideNavbar setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
+            </Box>
             {/* Hero Section */}
             <HeroSection />
 

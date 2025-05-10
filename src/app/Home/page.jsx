@@ -96,10 +96,12 @@ export const HomePage = () => {
     }, [matches])
     return (
         <>
-            <Box sx={{ mb: 4 }}>
+            <Box sx={{ mb: 4 }} component={'main'} onClick={() => setOpen(!open)}>
                 {/* Header */}
                 <Header setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
-                <SideNavbar setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
+                <Box sx={{ pt: 8 }}>
+                    <SideNavbar setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
+                </Box>
                 {/* Hero Section */}
                 <HeroSection sx={{ mt: 10 }} onClick={() => {
                     setOpen(false)
