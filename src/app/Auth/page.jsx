@@ -49,6 +49,7 @@ const Auth = () => {
         try {
             setLoading(true)
             if (mode === 'login') {
+                localStorage.clear()
                 const response = await AxiosInstance.post('/user/login', loginData)
 
                 if (response) {
@@ -72,13 +73,23 @@ const Auth = () => {
                     }
                 }
             } else {
+                localStorage.clear()
                 setLoading(true)
                 const registerData = { username: username, email: email, password: password }
                 const regResponse = await AxiosInstance.post('/user/register', registerData)
                 if (regResponse) {
-                    setLoading(false)
-                    localStorage.setItem('token', regResponse.token)
                     setClear(!clear)
+                    localStorage.setItem('token', regResponse.token)
+                    const checkIsAdmin = await AxiosInstance.get('/admin/log', {
+                        headers: {
+                            Authorization: `Bearer ${regResponse.token}`
+                        },
+                    })
+                    if (checkIsAdmin) {
+                        const username = checkIsAdmin?.data?.username
+                        localStorage.setItem('LocalUser', JSON.stringify({ username: username }))
+                    }
+                    setLoading(false)
                     router.push('/')
                 }
             }
