@@ -94,25 +94,26 @@ export const HomePage = () => {
             setOpen(false)
         }
     }, [matches])
+    const styles = {
+        pt: 2.5
+    }
     return (
         <>
-            <Box sx={{ mb: 4 }} component={'main'} onClick={() => setOpen(!open)}>
+            <Box sx={{ mb: 4 }} component={'main'}>
                 {/* Header */}
                 <Header setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
-                <Box sx={{ pt: 8 }}>
-                    <SideNavbar setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
-                </Box>
+                <SideNavbar styles={styles} setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
                 {/* Hero Section */}
-                <HeroSection sx={{ mt: 10 }} onClick={() => {
+                <HeroSection sx={{ mt: 10, pt: 1 }} onClick={() => {
                     setOpen(false)
                 }}>
-                    <Container maxWidth="lg">
+                    <Container maxWidth="lg" component={'main'} onClick={() => setOpen(false)}>
                         <motion.div
                             initial="hidden"
                             animate="visible"
                             variants={containerVariants}
                         >
-                            <Stack spacing={4}>
+                            <Stack spacing={4} sx={{ pt: matches ? 0 : 4 }}>
                                 <motion.div variants={itemVariants}>
                                     <Typography
                                         variant="h2"

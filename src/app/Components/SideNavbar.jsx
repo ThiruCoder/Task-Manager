@@ -30,7 +30,7 @@ function useScrollDirection() {
 
     return scrollUp;
 }
-const SideNavbar = ({ setOpen, open, tokenExisted, setTokenExisted }) => {
+const SideNavbar = ({ setOpen, open, tokenExisted, setTokenExisted, styles }) => {
     const scrollUp = useScrollDirection();
 
     return (
@@ -51,12 +51,17 @@ const SideNavbar = ({ setOpen, open, tokenExisted, setTokenExisted }) => {
                     display: open ? 'block' : 'none',
                 }}
             >
-                <Stack spacing={2} px={1} pt={3} sx={{ justifyContent: 'start' }}>
+                <Stack spacing={2} px={1} pt={3} sx={{
+                    justifyContent: 'flex-start',
+                    alignItems: 'flex-start',
+                    pt: styles.pt,
+                    width: '100%',
+                }}>
                     {navItems.map((item, index) => {
                         if (item?.title === 'Dashboard') {
                             return tokenExisted?.data?.role === 'admin' ? (
                                 <Tooltip title={item?.tool}>
-                                    <NavButton href={item?.link} key={s`Item-${index}`} sx={{ fontWeight: 700, color: 'black' }}>
+                                    <NavButton href={item?.link} key={s`Item-${index}`} sx={{ fontWeight: 700, color: 'black', textAlign: 'start', }}>
                                         {item?.title}
                                     </NavButton>
                                 </Tooltip>
@@ -80,7 +85,7 @@ const SideNavbar = ({ setOpen, open, tokenExisted, setTokenExisted }) => {
                                 }}
                             >
                                 {item.icon}
-                                {open && <Typography>{item.title}</Typography>}
+                                {open && <Typography sx={{ width: '100%' }}>{item.title}</Typography>}
                             </NavButton>
                         )
                     })}

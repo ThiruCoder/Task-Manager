@@ -15,18 +15,7 @@ const ProjectCard = styled(Paper)(({ theme }) => ({
 }));
 
 const ProjectSection = ({ projects }) => {
-    useEffect(() => {
-        const GetProjectData = async () => {
-            try {
-                await AxiosInstance.get('/project/get')
-                    .then((res) => console.log('ress', res))
-                    .catch((err) => console.log('ereeer', err))
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        GetProjectData();
-    }, [])
+
     return (
         <Box id="projects" py={10} sx={{ bgcolor: '#fff7ed' }}>
             <Container maxWidth="lg">

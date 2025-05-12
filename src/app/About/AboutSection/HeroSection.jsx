@@ -21,10 +21,10 @@ const HeroSection = () => {
                         Crafting beautiful and performant web experiences with modern technologies and best practices.
                     </Typography>
                     <Stack direction="row" spacing={2} mt={3}>
-                        <Button variant="contained" color="primary" size="large">
+                        <Button href='tel:7569583293' variant="contained" color="primary" size="large">
                             Get in touch
                         </Button>
-                        <Button variant="outlined" color="primary" size="large">
+                        <Button href='https://github.com/ThiruCoder' variant="outlined" color="primary" size="large">
                             View Projects
                         </Button>
                     </Stack>

@@ -222,6 +222,7 @@ const TaskContent = () => {
     // console.log('getUpdatedId', getUpdatedId);
 
     // localStorage.setItem('LocalUser', JSON.stringify(err.data.message))
+
     return (
         <Container>
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -389,15 +390,16 @@ const TaskManagement = () => {
     const [open, setOpen] = useState(false);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const styles = {
+        pt: 2
+    }
     return (
         <ThemeProvider theme={theme}>
-            <Box component={'main'} onClick={() => setOpen(!open)}>
+            <Box >
                 <CssBaseline />
                 <Header setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
-                <Box sx={{ pt: 8 }}>
-                    <SideNavbar setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
-                </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'column', mt: 10 }}>
+                <SideNavbar setOpen={setOpen} styles={styles} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
+                <Box sx={{ display: 'flex', flexDirection: 'column', mt: 10 }} component={'main'} onClick={() => setOpen(false)}>
                     <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
                         <TaskContent />
                     </Box>

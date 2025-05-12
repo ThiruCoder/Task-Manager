@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react'
-import { Box, Grid, Paper, Stack, Typography } from '@mui/material';
+import { Box, Grid, Paper, Stack, Typography, useMediaQuery } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import HeroSection from './AboutSection/HeroSection';
 import SkillSection from './AboutSection/SkillSection';
@@ -75,39 +75,6 @@ export default function About() {
         },
     ];
 
-    const experiences = [
-        {
-            period: '2020 - Present',
-            title: 'Senior Frontend Developer',
-            company: 'Tech Solutions Inc.',
-            points: [
-                'Led frontend development for enterprise applications',
-                'Implemented modern React architecture and best practices',
-                'Mentored junior developers and conducted code reviews',
-            ],
-        },
-        {
-            period: '2018 - 2020',
-            title: 'Frontend Developer',
-            company: 'Digital Agency XYZ',
-            points: [
-                'Developed responsive web applications',
-                'Optimized performance and accessibility',
-                'Collaborated with design team on UI/UX improvements',
-            ],
-        },
-        {
-            period: '2016 - 2018',
-            title: 'Junior Web Developer',
-            company: 'Startup Co.',
-            points: [
-                'Built and maintained company website',
-                'Implemented responsive designs',
-                'Assisted in backend development tasks',
-            ],
-        },
-    ];
-
     const projects = [
         {
             title: 'E-commerce Platform',
@@ -132,54 +99,37 @@ export default function About() {
         },
     ];
 
-    const testimonials = [
-        {
-            name: 'Sarah Johnson',
-            role: 'Project Manager at Tech Solutions',
-            quote: '"John is an exceptional developer who consistently delivers high-quality work. His attention to detail and problem-solving skills are outstanding."',
-            image: 'https://creatie.ai/ai/api/search-image?query=professional',
-        },
-        {
-            name: 'Mike Chen',
-            role: 'CTO at Digital Agency XYZ',
-            quote: '"Working with John was a pleasure. His technical expertise and ability to communicate complex ideas made our projects successful."',
-            image: 'https://creatie.ai/ai/api/search-image?query=professional',
-        },
-        {
-            name: 'Emily Rodriguez',
-            role: 'Lead Designer at Startup Co.',
-            quote: '"John\'s ability to translate designs into pixel-perfect implementations is remarkable. He\'s a valuable asset to any development team."',
-            image: 'https://creatie.ai/ai/api/search-image?query=professional',
-        },
-    ];
-
+    const matches = useMediaQuery('(min-width:600px)');
+    const styles = {
+        pt: 11
+    }
     return (
 
-        <Box component="main" sx={{ bgcolor: 'white', color: 'text.primary' }} onClick={() => setOpen(!open)}>
+        <Box sx={{ bgcolor: 'white', color: 'text.primary' }}>
             <Header setOpen={setOpen} open={open} setTokenExisted={setTokenExisted} tokenExisted={tokenExisted} />
-            <Box sx={{ pt: 8 }}>
-                <SideNavbar setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
+            <SideNavbar setOpen={setOpen} styles={styles} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
+            <Box component={'main'} onClick={() => setOpen(false)}>
+                {/* Hero Section */}
+                <HeroSection />
+
+                {/* Skills Section */}
+                <SkillSection skills={skills} />
+
+                {/* Experience Section */}
+                {/* <ExperienceSection experiences={experiences} /> */}
+
+                {/* Projects Section */}
+                <ProjectSection projects={projects} />
+
+                {/* Testimonials Section */}
+                {/* <TestimonialSection testimonials={testimonials} /> */}
+
+                {/* Contact Section */}
+                {/* <ContactSection /> */}
+
+                {/* Footer */}
+                <Footer />
             </Box>
-            {/* Hero Section */}
-            <HeroSection />
-
-            {/* Skills Section */}
-            <SkillSection skills={skills} />
-
-            {/* Experience Section */}
-            {/* <ExperienceSection experiences={experiences} /> */}
-
-            {/* Projects Section */}
-            <ProjectSection projects={projects} />
-
-            {/* Testimonials Section */}
-            {/* <TestimonialSection testimonials={testimonials} /> */}
-
-            {/* Contact Section */}
-            {/* <ContactSection /> */}
-
-            {/* Footer */}
-            <Footer />
         </Box>
     );
 }
