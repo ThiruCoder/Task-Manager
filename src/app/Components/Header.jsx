@@ -99,8 +99,8 @@ const Header = ({ setOpen, open, tokenExisted, setTokenExisted }) => {
                         {navItems.map((item, index) => {
                             if (item?.title === 'Dashboard') {
                                 return tokenExisted?.data?.role === 'admin' ? (
-                                    <Tooltip title={item?.tool}>
-                                        <NavButton href={item?.link} key={s`Item-${index}`} sx={{ fontWeight: 700, color: 'black' }}>
+                                    <Tooltip title={item?.tool} key={`Tooltip-${item?.id || index}`}>
+                                        <NavButton href={item?.link} key={`Item-${index}`} sx={{ fontWeight: 700, color: 'black' }}>
                                             {item?.title}
                                         </NavButton>
                                     </Tooltip>

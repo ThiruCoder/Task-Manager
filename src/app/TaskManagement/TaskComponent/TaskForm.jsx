@@ -17,7 +17,9 @@ const TaskForm = ({
     open,
     onClose,
     initialTask,
-    updateFormData, setUpdateFormData, getUpdatedId, setGetUpdatedId, setFormOpen
+    updateFormData, setUpdateFormData, getUpdatedId, setGetUpdatedId, setFormOpen,
+    refresh,
+    setRefresh
 }) => {
     const isEditing = !!initialTask;
     const [userData, setUserData] = useState([]);
@@ -53,7 +55,16 @@ const TaskForm = ({
                     </IconButton>
                 </Box>
             </DialogTitle>
-            <DashboardTaskForm userData={userData} setFormOpen={setFormOpen} getUpdatedId={getUpdatedId} updateFormData={updateFormData} setUpdateFormData={setUpdateFormData} setGetUpdatedId={setGetUpdatedId} />
+            <DashboardTaskForm
+                refresh={refresh}
+                setRefresh={setRefresh}
+                userData={userData}
+                setFormOpen={setFormOpen}
+                getUpdatedId={getUpdatedId}
+                updateFormData={updateFormData}
+                setUpdateFormData={setUpdateFormData}
+                setGetUpdatedId={setGetUpdatedId}
+            />
         </Dialog>
     );
 };

@@ -93,7 +93,6 @@ const TaskContent = () => {
                 })
                 if (res) {
                     setGetCurrentTask(res.data);
-                    setRefresh(!refresh)
                 }
             } catch (err) {
                 console.log('Fetch failed:', err);
@@ -120,7 +119,6 @@ const TaskContent = () => {
                 });
                 if (res) {
                     setGetAssignTask(res.data);
-                    setRefresh(!refresh)
                 }
             } catch (err) {
                 console.error('Fetch failed:', err);
@@ -202,8 +200,6 @@ const TaskContent = () => {
     };
 
 
-    // console.log(getUpdatedId);
-
     const handleClose = () => {
         setOpen(false);
         setTaskView(null)
@@ -215,6 +211,7 @@ const TaskContent = () => {
         }
     }, [formOpen]);
 
+    // console.log('asdfjkh');
 
     // console.log(formOpen);
 
@@ -349,6 +346,8 @@ const TaskContent = () => {
                         getUpdatedId={getUpdatedId}
                         setGetUpdatedId={setGetUpdatedId}
                         setFormOpen={setFormOpen}
+                        refresh={refresh}
+                        setRefresh={setRefresh}
                     />
                     : null}
 

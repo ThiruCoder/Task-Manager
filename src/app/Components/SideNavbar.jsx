@@ -54,17 +54,30 @@ const SideNavbar = ({ setOpen, open, tokenExisted, setTokenExisted, styles }) =>
                 <Stack spacing={2} px={1} pt={3} sx={{
                     justifyContent: 'flex-start',
                     alignItems: 'flex-start',
-                    pt: styles.pt,
+                    pt: styles.pt || 5,
                     width: '100%',
                 }}>
                     {navItems.map((item, index) => {
                         if (item?.title === 'Dashboard') {
                             return tokenExisted?.data?.role === 'admin' ? (
-                                <Tooltip title={item?.tool}>
-                                    <NavButton href={item?.link} key={s`Item-${index}`} sx={{ fontWeight: 700, color: 'black', textAlign: 'start', }}>
-                                        {item?.title}
-                                    </NavButton>
-                                </Tooltip>
+                                <NavButton
+                                    href={item?.link}
+                                    display="flex"
+                                    gap={open ? 2 : 0}
+                                    px={2}
+                                    py={1}
+                                    key={`Item-${index}`}
+                                    startIcon={item?.icon}
+                                    sx={{
+                                        borderRadius: 2,
+                                        cursor: 'pointer',
+                                        transition: 'all 0.3s',
+                                        '&:hover': {
+                                            backgroundColor: '#f5f5f5',
+                                        },
+                                    }}>
+                                    {item?.title}
+                                </NavButton>
                             ) : null
                         }
                         return (
@@ -75,6 +88,7 @@ const SideNavbar = ({ setOpen, open, tokenExisted, setTokenExisted, styles }) =>
                                 px={2}
                                 py={1}
                                 key={`Item-${index}`}
+                                startIcon={item?.icon}
                                 sx={{
                                     borderRadius: 2,
                                     cursor: 'pointer',
@@ -84,7 +98,6 @@ const SideNavbar = ({ setOpen, open, tokenExisted, setTokenExisted, styles }) =>
                                     },
                                 }}
                             >
-                                {item.icon}
                                 {open && <Typography sx={{ width: '100%' }}>{item.title}</Typography>}
                             </NavButton>
                         )

@@ -62,7 +62,9 @@ const DashboardTaskForm = ({
     isEditing,
     updateFormData,
     setUpdateFormData,
-    userData, getUpdatedId, setGetUpdatedId, setFormOpen
+    userData, getUpdatedId, setGetUpdatedId, setFormOpen,
+    refresh,
+    setRefresh
 }) => {
     const [title, setTitle] = useState('');
     const [assignedTo, setAssignedTo] = useState('')
@@ -140,6 +142,7 @@ const DashboardTaskForm = ({
 
     // task/CreateTask
 
+    // Create Task data
     const handleCreateSubmit = async (e) => {
         e.preventDefault();
         console.log(errors)
@@ -166,6 +169,7 @@ const DashboardTaskForm = ({
                     setPriority(Priority.MEDIUM);
                     setStatus(Status.IN_PROGRESS);
                     setAssignedTo('')
+                    setRefresh(prev => !prev)
                 })
                 .catch((err) => console.log(err))
         } catch (error) {
@@ -173,6 +177,7 @@ const DashboardTaskForm = ({
         }
     };
 
+    // Update Task Data
     const handleUpdateSubmit = async (e) => {
         e.preventDefault();
         const id = UpdatedId;
@@ -194,8 +199,9 @@ const DashboardTaskForm = ({
                     setDueDate(null);
                     setPriority(Priority.MEDIUM);
                     setStatus(Status.IN_PROGRESS);
-                    setUpdateFormData(null)
                     setGetUpdatedId(null)
+                    setRefresh(prev => !prev)
+                    setUpdateFormData(null)
                 })
                 .catch((err) => console.log(err))
         } catch (error) {

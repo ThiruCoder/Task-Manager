@@ -32,7 +32,7 @@ const Status = [
 ]
 
 
-const TaskFilter = ({ onFilterChange, filters, setFilters, filteringCurrentData, filteringAssignData, source }) => {
+const TaskFilter = ({ filters, setFilters, filteringCurrentData, filteringAssignData, source }) => {
     const [expanded, setExpanded] = useState(false);
     const [visible, setVisible] = useState(false)
 
@@ -42,7 +42,6 @@ const TaskFilter = ({ onFilterChange, filters, setFilters, filteringCurrentData,
             search: e.target.value,
         };
         setFilters(newFilters);
-        onFilterChange(newFilters);
     };
 
 
@@ -53,7 +52,6 @@ const TaskFilter = ({ onFilterChange, filters, setFilters, filteringCurrentData,
                 && e.target.value,
         };
         setFilters(newFilters);
-        onFilterChange(newFilters);
     };
 
     const handleStatusChange = (e) => {
@@ -63,7 +61,6 @@ const TaskFilter = ({ onFilterChange, filters, setFilters, filteringCurrentData,
                 && e.target.value,
         };
         setFilters(newFilters);
-        onFilterChange(newFilters);
     };
 
     const handleClearFilters = () => {
@@ -73,7 +70,6 @@ const TaskFilter = ({ onFilterChange, filters, setFilters, filteringCurrentData,
             status: [],
         };
         setFilters(newFilters);
-        onFilterChange(newFilters);
     };
 
     const hasActiveFilters = filters.search ||
@@ -108,7 +104,6 @@ const TaskFilter = ({ onFilterChange, filters, setFilters, filteringCurrentData,
                                         onClick={() => {
                                             const newFilters = { ...filters, search: '' };
                                             setFilters(newFilters);
-                                            onFilterChange(newFilters);
                                         }}
                                     >
                                         <X size={16} />

@@ -72,16 +72,16 @@ const Dashboard = () => {
       isMounted = false;
     };
   }, []);
-
+  const styles = {
+    pt: 11
+  }
   return (
     <ProtectedRoute>
-      <Box component={'main'} sx={{ bgcolor: '#e8e6e6' }} onClick={() => setOpen(!open)}>
+      <Box sx={{ bgcolor: '#e8e6e6' }}>
         {/* <DashboardHeader headerColor={headerColor} /> */}
         <Header setOpen={setOpen} open={open} headerColor={headerColor} setTokenExisted={setTokenExisted} tokenExisted={tokenExisted} />
-        <Box sx={{ pt: 8 }}>
-          <SideNavbar setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
-        </Box>
-        <Container sx={{ pt: 12, mb: 4 }}>
+        <SideNavbar styles={styles} setOpen={setOpen} open={open} tokenExisted={tokenExisted} setTokenExisted={setTokenExisted} />
+        <Container sx={{ pt: 12, mb: 4 }} component={'main'} onClick={() => setOpen(false)} >
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid size={{ xs: 12, md: 4 }}>
               <ActivityMetrics
